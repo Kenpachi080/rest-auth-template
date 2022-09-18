@@ -24,11 +24,7 @@ class ChangeRequest extends FormRequest
     public function rules()
     {
         return [
-            'fio' => 'required',
-            'address' => 'required',
-            'city' => 'required',
-            'area' => 'required',
-            'birthday' => 'required'
+            'phone' => 'required',
         ];
     }
 }

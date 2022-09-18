@@ -144,12 +144,8 @@ interface AuthInterface
      *    required=true,
      *    description="Апи Токен",
      *    @OA\JsonContent(
-     *       required={"fio, email, telephone, address"},
-     *       @OA\Property(property="fio", type="string", format="string", example="123"),
-     *       @OA\Property(property="email", type="string", format="string", example="321"),
-     *       @OA\Property(property="telephone", type="string", format="string", example="321"),
-     *       @OA\Property(property="address", type="string", format="string", example="321"),
-     *       @OA\Property(property="birthday", type="date", format="date", example="23.10.2002"),
+     *       required={"phone"},
+     *       @OA\Property(property="phone", type="string", format="string", example="321"),
      *  ),
      * ),
      *     @OA\Parameter(

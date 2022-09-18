@@ -23,6 +23,7 @@ class User extends \TCG\Voyager\Models\User
         'password',
         'phone',
         'api_token',
+        'code',
     ];
 
     /**

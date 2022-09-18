@@ -216,33 +216,13 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "fio, email, telephone, address"
+                                    "phone"
                                 ],
                                 "properties": {
-                                    "fio": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "123"
-                                    },
-                                    "email": {
+                                    "phone": {
                                         "type": "string",
                                         "format": "string",
                                         "example": "321"
-                                    },
-                                    "telephone": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "321"
-                                    },
-                                    "address": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "321"
-                                    },
-                                    "birthday": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "23.10.2002"
                                     }
                                 },
                                 "type": "object"
@@ -383,6 +363,16 @@
                 "summary": "Помменять пароль",
                 "description": "Помменять пароль",
                 "operationId": "changePassword",
+                "parameters": [
+                    {
+                        "name": "api_token",
+                        "in": "header",
+                        "description": "Токен авторизации(api_token)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "description": "Апи Токен",
                     "required": true,

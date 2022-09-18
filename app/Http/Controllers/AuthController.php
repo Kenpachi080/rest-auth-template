@@ -55,7 +55,7 @@ class AuthController extends Controller implements AuthInterface
 
     public function rebootpassword(RebootPasswordRequest $request): JsonResponse
     {
-        $user = User::where('id', '=', Auth::id())->first();
+        $user = auth()->user();
         if (!$user || !Hash::check($request->oldpassword, $user->password)) {
             return response()->json([
                 'message' => "Неверный старый пароль"
@@ -66,44 +66,26 @@ class AuthController extends Controller implements AuthInterface
         $user->save();
         return response()->json([
             'message' => 'Пароль был успешно заменён!',
-            'user' => new UserResource($user->id),
+            'user' => new UserResource(Auth::id()),
         ], 201);
     }
 
     public function change(ChangeRequest $request): JsonResponse
     {
-
-        $user = User::where('id', '=', Auth::id())->select('id', 'api_token', 'fio', 'email', 'telephone', 'address')->first();
-        if (!$user) {
-            return response()->json([
-                'message' => 'Пользователь не был найден'
-            ], 401);
-        }
-        $user->fio = $request->fio;
-        $user->email = $request->email;
-        $user->telephone = $request->telephone;
-        $user->address = $request->address;
-        $user->birthday = $request->birthday;
-        $user->save();
+        auth()->user()->update($request->validated());
         return response()->json([
             'message' => 'Данные успешно были изменены',
-            'user' => new UserResource($user->id)
+            'user' => new UserResource(Auth::id())
         ], 201);
     }
 
     public function forgot(ForgotRequest $request): JsonResponse
     {
-        if ($request->email) {
-            $user = User::where('email', '=', $request->email)->first();
-        } else if ($request->phone) {
-            $user = User::where('phone', '=', $request->phone)->first();
-        } else {
-            $user = null;
-        }
+        $user = User::query()
+            ->when($request->email, fn($query) => $query->where('email', $request->email))
+            ->when($request->phone, fn($query) => $query->where('phone', $request->phone))
+            ->firstOrFail();
 
-        if ($user == null || !$user) {
-            return response()->json(['message' => 'Не найден пользователь'], 404);
-        }
         $code = Str::random(6);
         $user->code = $code;
         $user->save();
@@ -113,29 +95,26 @@ class AuthController extends Controller implements AuthInterface
 
     public function code(CodeRequest $request): JsonResponse
     {
-        if ($request->email) {
-            $user = User::where('email', '=', $request->email)->first();
-        } else if ($request->phone) {
-            $user = User::where('phone', '=', $request->phone)->first();
+        $user = User::query()
+            ->when($request->email, fn($query) => $query->where('email', $request->email))
+            ->when($request->phone, fn($query) => $query->where('phone', $request->phone))
+            ->firstOrFail();
+
+        if ($user->code == $request->code) {
+            return response()->json(['message' => 'Правильный код'], 200);
+        } else {
+            return response()->json(['message' => 'Не правильный код'], 404);
         }
-        if ($user != null) {
-            if ($user->code == $request->code) {
-                return response()->json(['message' => 'Правильный код'], 200);
-            } else {
-                return response()->json(['message' => 'Не правильный код'], 404);
-            }
-        }
-        return response()->json(['message' => 'Пользователь не найден'], 404);
     }
 
     public function changePassword(ChangePasswordRequest $request): JsonResponse
     {
-        if ($request->email) {
-            $user = User::where('email', '=', $request->email)->first();
-        } else if ($request->phone) {
-            $user = User::where('telephone', '=', $request->phone)->first();
-        }
-        if (!$user->code == $request->code) {
+        $user = User::query()
+            ->when($request->email, fn($query) => $query->where('email', $request->email))
+            ->when($request->phone, fn($query) => $query->where('phone', $request->phone))
+            ->firstOrFail();
+
+        if ($user->code != $request->code) {
             return response()->json(['message' => 'Не правильный код'], 404);
         }
         $user->password = bcrypt($request->password);
@@ -151,15 +130,7 @@ class AuthController extends Controller implements AuthInterface
 
     public function view(): JsonResponse
     {
-        $user = User::where('id', '=', Auth::id())
-            ->first();
-        return response()->json(new UserResource($user->id), 200);
-    }
-
-    private function date_normalise($date, $format)
-    {
-        $res = date($format, $date);
-        return $res->format($format);
+        return response()->json(new UserResource(Auth::id()), 200);
     }
 }
 
