@@ -1,0 +1,469 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Kostum API",
+        "description": "Документация",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Авторизация без api_token"
+                ],
+                "summary": "Регистрация",
+                "description": "Регистрация",
+                "operationId": "authRegister",
+                "requestBody": {
+                    "description": "Регистрация",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone, password, email"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "+7708"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "123"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "testemail@mail.ru"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Возврощается полная информация про пользователя, и его токен для дальнейшей работы с юзером",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "type": "object",
+                                            "example": []
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "18|TuQoXj84z5IxclUeRK89bSS4839sQfJ8KsQRVRVO"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Авторизация без api_token"
+                ],
+                "summary": "Авторизация",
+                "description": "Авторизация по АПИ токену",
+                "operationId": "authLogin",
+                "requestBody": {
+                    "description": "Апи Токен",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone, password"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "+7708"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Возврощается полная информация про пользователя, и его токен для дальнейшей работы с юзером",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "type": "object",
+                                            "example": []
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "FKOhXAr6Xhx2e6fMdaKZbTOCxCBwLuJDO3j8fYjRoDG9XoAYKQUSPzayU4BM"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/rebootpassword": {
+            "post": {
+                "tags": [
+                    "Авторизация с api_token"
+                ],
+                "summary": "Поменять пароль",
+                "description": "Поменять пароль(для авторизированных пользователей",
+                "operationId": "rebootpassword",
+                "parameters": [
+                    {
+                        "name": "api_token",
+                        "in": "header",
+                        "description": "Токен авторизации(api_token)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Апи Токен",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "oldpassword, newpassword"
+                                ],
+                                "properties": {
+                                    "oldpassword": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "123"
+                                    },
+                                    "newspassword": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "321"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Массив с: Message - Пароль был успешно заменён!, user - Данные юзера(новый апитокен)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Пароль был успешно изменен"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/change": {
+            "post": {
+                "tags": [
+                    "Авторизация с api_token"
+                ],
+                "summary": "Поменять данные клиента",
+                "description": "Поменять данные клиента",
+                "operationId": "authChange",
+                "parameters": [
+                    {
+                        "name": "api_token",
+                        "in": "header",
+                        "description": "Токен авторизации(api_token)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Апи Токен",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "fio, email, telephone, address"
+                                ],
+                                "properties": {
+                                    "fio": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "123"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "321"
+                                    },
+                                    "telephone": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "321"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "321"
+                                    },
+                                    "birthday": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "23.10.2002"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Массив с: Message - Данные успешно были изменены, user - Данные юзера",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "type": "object",
+                                            "example": []
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Данные успешно были изменены"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/forgot": {
+            "post": {
+                "tags": [
+                    "Авторизация без api_token"
+                ],
+                "summary": "Забыл пароль",
+                "description": "забыл пароль",
+                "operationId": "forgot",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email, phone"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "321"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "321"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "На почту был отправлен код",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/code": {
+            "post": {
+                "tags": [
+                    "Авторизация без api_token"
+                ],
+                "summary": "Подтвердить код",
+                "description": "Подтвердить код",
+                "operationId": "code",
+                "requestBody": {
+                    "description": "Апи Токен",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "code"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "321"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "321"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Правильный код",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/changePassword": {
+            "post": {
+                "tags": [
+                    "Авторизация без api_token"
+                ],
+                "summary": "Помменять пароль",
+                "description": "Помменять пароль",
+                "operationId": "changePassword",
+                "requestBody": {
+                    "description": "Апи Токен",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "password, email, phone, address"
+                                ],
+                                "properties": {
+                                    "password": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "123"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "321"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "321"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Массив с: Message - Пароль был успешно заменён, user - Данные юзера(новый апитокен)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/view": {
+            "post": {
+                "tags": [
+                    "Авторизация с api_token"
+                ],
+                "summary": "Посмотреть данные",
+                "description": "Посмотреть данные",
+                "operationId": "viewauth",
+                "parameters": [
+                    {
+                        "name": "api_token",
+                        "in": "header",
+                        "description": "Токен авторизации(api_token)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CallBack с данными",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
